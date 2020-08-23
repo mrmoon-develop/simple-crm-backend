@@ -30,9 +30,16 @@ async function getUsers(req, res) {
 async function getUser(req, res) {
   console.log('req.params', req.params);
   await models.User.where('users.id', req.params.id)
-    .query((qb) => qb.leftJoin('companies', 'users.company_id', 'companies.id'))
+    .query((qb) => {
+      qb.leftJoin('companies', 'users.company_id', 'companies.id');
+      qb.leftJoin('role', 'role.code', 'users.type');
+    })
     .fetch({
-      columns: ['users.*', 'companies.name as company_name'],
+      columns: [
+        'users.*',
+        'companies.name as company_name',
+        'role.name as role_name',
+      ],
     })
     .then((user) => {
       res.status(200).json({
@@ -67,8 +74,18 @@ async function getCompanies(req, res) {
  * Get companies from db
  */
 async function login(req, res) {
-  var dbResponse = await models.User.where('email', req.body.email)
-    .fetch()
+  var dbResponse = await models.User.where('users.email', req.body.email)
+    .query((qb) => {
+      qb.leftJoin('companies', 'users.company_id', 'companies.id');
+      qb.leftJoin('role', 'role.code', 'users.type');
+    })
+    .fetch({
+      columns: [
+        'users.*',
+        'companies.name as company_name',
+        'role.name as role_name',
+      ],
+    })
     .then((user) => {
       res.status(200).json({
         code: 200,
