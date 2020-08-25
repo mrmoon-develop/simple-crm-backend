@@ -39,6 +39,10 @@ router.get('/getActiveIssues', issuesController.getActiveIssues);
  * Get finished issues from db
  */
 router.get('/getFinishedIssues', issuesController.getFinishedIssues);
+/**
+ * Store issue on database
+ */
+router.post('/createIssue', issuesController.createIssue);
 
 /**
  * ------------------ Issues - end ------------------
