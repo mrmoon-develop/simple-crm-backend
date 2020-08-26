@@ -14,8 +14,13 @@ const Company = bookshelf.model('Company', {
   tableName: 'companies',
 });
 
+const Poll = bookshelf.model('poll', {
+  tableName: 'polls',
+});
+
 module.exports = {
   User,
   Issue,
   Company,
+  Poll,
 };

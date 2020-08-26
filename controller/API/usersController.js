@@ -1,28 +1,12 @@
 module.exports = {
-  getUsers,
   getUser,
+  getUsers,
+  getTechnicalUsers,
   getCompanies,
   login,
 };
 
 const models = require('../../database/models');
-
-/**
- * Get users from db
- */
-async function getUsers(req, res) {
-  var dbResponse = await models.User.query((qb) =>
-    qb.leftJoin('companies', 'users.company_id', 'companies.id')
-  ).fetchAll({
-    columns: ['users.*', 'companies.name as company_name'],
-  });
-  dbResponse = dbResponse.toJSON();
-  res.status(200).json({
-    code: 200,
-    data: dbResponse,
-  });
-  return dbResponse;
-}
 
 /**
  * Get user by id
@@ -55,6 +39,42 @@ async function getUser(req, res) {
       });
       console.log('error', error);
     });
+}
+
+/**
+ * Get users from db
+ */
+async function getUsers(req, res) {
+  var dbResponse = await models.User.query((qb) =>
+    qb.leftJoin('companies', 'users.company_id', 'companies.id')
+  ).fetchAll({
+    columns: ['users.*', 'companies.name as company_name'],
+  });
+  dbResponse = dbResponse.toJSON();
+  res.status(200).json({
+    code: 200,
+    data: dbResponse,
+  });
+  return dbResponse;
+}
+
+async function getTechnicalUsers(req, res) {
+  var dbResponse = await models.User.where('type', 2).fetchAll({
+    columns: ['*', 'name as title'],
+  });
+
+  var code = '50201';
+  if (!dbResponse || dbResponse.length == 0) {
+    dbResponse = 'Empty response';
+  } else {
+    code = 200;
+    dbResponse = dbResponse.toJSON();
+  }
+
+  res.status(200).json({
+    code,
+    data: dbResponse,
+  });
 }
 
 /**

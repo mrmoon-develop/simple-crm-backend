@@ -2,10 +2,16 @@ var express = require('express');
 var router = express.Router();
 var usersController = require('../../controller/API/usersController');
 const issuesController = require('../../controller/API/issuesController');
+const pollsController = require('../../controller/API/pollsController');
 
 /**
  * ------------------ Users - start ------------------
  */
+
+/**
+ * Get user by id from db
+ */
+router.get('/getUser/:id', usersController.getUser);
 
 /**
  * Get all users from db
@@ -13,9 +19,9 @@ const issuesController = require('../../controller/API/issuesController');
 router.get('/getUsers', usersController.getUsers);
 
 /**
- * Get user by id from db
+ * Get all technical users from db
  */
-router.get('/getUser/:id', usersController.getUser);
+router.get('/getTechnicalUsers', usersController.getTechnicalUsers);
 
 /**
  * ------------------ Users - end ------------------
@@ -26,9 +32,19 @@ router.get('/getUser/:id', usersController.getUser);
  */
 
 /**
+ * Get an issue by id
+ */
+router.get('/getIssue/:issueId', issuesController.getIssue);
+
+/**
  * Get all issues from db
  */
 router.get('/getIssues', issuesController.getIssues);
+
+/**
+ * Get all issues from db
+ */
+router.put('/updateIssue', issuesController.updateIssue);
 
 /**
  * Get active issues from db
@@ -49,9 +65,40 @@ router.post('/createIssue', issuesController.createIssue);
  */
 
 /**
+ * ------------------ Companies - start ------------------
+ */
+
+/**
  * Get all companies from db
  */
 router.get('/getCompanies', usersController.getCompanies);
+
+/**
+ * ------------------ Companies - end ------------------
+ */
+
+/**
+ * ------------------ Polls - start ------------------
+ */
+
+/**
+ * Get polls from db
+ */
+router.get('/getPolls', pollsController.getPolls);
+
+/**
+ * Get polls from db
+ */
+router.get('/getPoll/:id', pollsController.getPoll);
+
+/**
+ * Get polls from db
+ */
+router.get('/getPollByIssue/:id', pollsController.getPollByIssueId);
+
+/**
+ * ------------------ Polls - end ------------------
+ */
 
 /**
  * Validate login
