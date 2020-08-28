@@ -14,6 +14,8 @@ var app = express();
 //Allow cors
 app.use(cors());
 
+app.use(express.static('public'));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

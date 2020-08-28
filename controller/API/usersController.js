@@ -3,6 +3,7 @@ module.exports = {
   getUsers,
   getTechnicalUsers,
   getCompanies,
+  createUser,
   login,
 };
 
@@ -82,6 +83,19 @@ async function getTechnicalUsers(req, res) {
  */
 async function getCompanies(req, res) {
   var dbResponse = await models.Company.fetchAll();
+  dbResponse = dbResponse.toJSON();
+  res.status(200).json({
+    code: 200,
+    data: dbResponse,
+  });
+  return dbResponse;
+}
+
+/**
+ * Create a user on DB
+ */
+async function createUser(req, res) {
+  var dbResponse = await new models.User(req.body).save();
   dbResponse = dbResponse.toJSON();
   res.status(200).json({
     code: 200,

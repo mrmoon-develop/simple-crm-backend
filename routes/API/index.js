@@ -24,6 +24,11 @@ router.get('/getUsers', usersController.getUsers);
 router.get('/getTechnicalUsers', usersController.getTechnicalUsers);
 
 /**
+ * Create an user on db
+ */
+router.post('/createUser', usersController.createUser);
+
+/**
  * ------------------ Users - end ------------------
  */
 
@@ -50,6 +55,14 @@ router.put('/updateIssue', issuesController.updateIssue);
  * Get active issues from db
  */
 router.get('/getActiveIssues', issuesController.getActiveIssues);
+
+/**
+ * Get active issues from db
+ */
+router.get(
+  '/getActiveIssuesByCustomer/:customerId',
+  issuesController.getActiveIssuesByCustomer
+);
 
 /**
  * Get finished issues from db
@@ -94,11 +107,34 @@ router.get('/getPoll/:id', pollsController.getPoll);
 /**
  * Get polls from db
  */
-router.get('/getPollByIssue/:id', pollsController.getPollByIssueId);
+router.get('/getPollByIssue/:issueId', pollsController.getPollByIssueId);
+
+/**
+ * Create poll
+ */
+router.post('/createPoll', pollsController.createPoll);
+
+/**
+ * Generate a Poll report
+ */
+router.post(
+  '/getPollsReportByCompany',
+  pollsController.getPollsReportByCompany
+);
+
+/**
+ * Get all polls by company
+ */
+router.get('/getPollsByCompany', pollsController.getPollsByCompany);
 
 /**
  * ------------------ Polls - end ------------------
  */
+
+router.get('/downloadPollsReport', function (req, res) {
+  const file = `${__dirname}/../../results/encuestas.xlsx`;
+  res.download(file); // Set disposition and send it.
+});
 
 /**
  * Validate login
