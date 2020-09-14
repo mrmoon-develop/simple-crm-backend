@@ -5,6 +5,7 @@ module.exports = {
   getActiveIssues,
   getActiveIssuesByCustomer,
   getFinishedIssues,
+  getFinishedIssuesByCustomer,
   createIssue,
 };
 
@@ -166,9 +167,14 @@ async function getFinishedIssues(req, res) {
       qb.leftJoin('users as uAttender', 'issues.attender_id', 'uAttender.id');
     })
     .fetchAll({
-      columns: ['issues.id', 'issues.title', 'issues.state', 'issues.priority'],
+      columns: [
+        'issues.id',
+        'issues.title',
+        'companies.name',
+        'issues.state',
+        'issues.priority',
+      ],
     });
-
   dbResponse = dbResponse.toJSON();
 
   if (dbResponse.length == 0) {
@@ -177,6 +183,43 @@ async function getFinishedIssues(req, res) {
 
   res.status(200).json({
     code: 200,
+    data: dbResponse,
+  });
+}
+
+/**
+ * Get active issues from db
+ */
+async function getFinishedIssuesByCustomer(req, res) {
+  var code = 200;
+  var dbResponse = await models.Issue.where(
+    'issues.customer_id',
+    req.params.customerId
+  )
+    .where('issues.state', 'F')
+    .query((qb) => {
+      qb.leftJoin('companies', 'issues.company_id', 'companies.id');
+      qb.leftJoin('users as uCustomer', 'issues.customer_id', 'uCustomer.id');
+      qb.leftJoin('users as uAttender', 'issues.attender_id', 'uAttender.id');
+    })
+    .fetchAll({
+      columns: [
+        'issues.id',
+        'issues.title',
+        'companies.name',
+        'issues.state',
+        'issues.priority',
+      ],
+    });
+  dbResponse = dbResponse.toJSON();
+
+  if (dbResponse.length == 0) {
+    code = 50202;
+    dbResponse = 'Empty response';
+  }
+
+  res.status(200).json({
+    code,
     data: dbResponse,
   });
 }

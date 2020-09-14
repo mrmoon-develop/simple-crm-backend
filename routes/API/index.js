@@ -68,6 +68,15 @@ router.get(
  * Get finished issues from db
  */
 router.get('/getFinishedIssues', issuesController.getFinishedIssues);
+
+/**
+ * Get active issues from db
+ */
+router.get(
+  '/getFinishedIssuesByCustomer/:customerId',
+  issuesController.getFinishedIssuesByCustomer
+);
+
 /**
  * Store issue on database
  */
